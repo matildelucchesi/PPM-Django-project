@@ -1,0 +1,123 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Profile - {{user_profile.user.username}}</title>
+    <link href="{%static 'css/profile.css' %}" rel="stylesheet" type="text/css">
+    <link href="{%static 'css/post.css' %}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="{%static 'js/main.js' %}"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="wrapper">
+            <div class="back-arrow">
+                <a class="back" href="/">
+                    <img src="{%static 'img/back-arrow.png' %}" class="back-arrow-img" alt="back-arrow-img">
+                </a>
+            </div>
+            {% if user_profile == request_profile %}
+                <h1>Welcome to your Profile</h1>
+            {% else %}
+                <h1>This is the profile of {{user_profile.user.username}}</h1>
+            {% endif %}
+            <div class="settings-container">
+                <button class="settings-button">
+                    <a href="/settings">
+                       <img src="{%static 'img/settings-icon.png' %}" class="icon" alt="settings-icon"> 
+                    </a>
+                </button>
+            </div>
+        </div>
+    </header>
+    <div class="content">
+        <div class="left">
+            <div class="container">
+                <div class="profile-img-container">
+                    <div class="profile-img">
+                        <img src="{{ user_profile.profile_img.url }}" alt="Profile image">
+                    </div>
+                    <h3 class="nickname">{{user_profile.user.username}}</h3>
+                    <div class="bio">
+                       {{user_profile.bio}}
+                    </div>
+                </div>
+                <div class="other">
+                    <form action="/follow" method="post">
+                        {% csrf_token %}
+
+                        {% if user_followers == 0 or user_followers == 1 %}
+                            <b>{{user_followers}} follower</b>
+                        {% else %}
+                           <b>{{user_followers}} followers</b>
+                        {% endif %}
+                                    
+                        {% if user_following == 0 or user_following == 1 %}
+                            <b>{{user_following}} follower</b>
+                        {% else %}
+                            <b>{{user_following}} followers</b>
+                        {% endif %}
+
+                        <input type="hidden" value="{{user.username}}" name="follower" />
+                        <input type="hidden" value="{{user_object.username}}" name="user" />
+                        {% if user_object.username == user.username%}
+                        <a>
+                            <button type="submit" style="display: none">
+                                {{button_text}}
+                            </button>
+                        </a>
+                        {% else %}
+                        <a>
+                            <button type="submit">
+                                {{button_text}}
+                            </button>
+                        </a>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+        <div class="posts">
+            {% for post in user_posts reversed %}
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-info">
+                            <h3 class="username"><a href="">@{{post.user}}</a></h3>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>{{post.caption}}</p>
+                        {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="post-img">
+                        {% endif %}
+                    </div>
+                    <div class="post-footer">
+                        <div class="likes">
+                            <a href="/like?post_id={{post.id}}">
+                                <button class="like-button">
+                                    <span class="like-text">
+                                        Like
+                                    </span>
+                                </button>
+                            </a>
+                            {% if post.likes == 0 %}
+                                <p>No likes</p>
+                            {% elif post.likes == 1 %}
+                                <p>Liked by 1 person</p>
+                            {% else %}
+                                <p>Liked by {{ post.likes }} people</p>
+                            {% endif %}
+                        </div>
+                        <button class="comment-button">Comment</button>
+                    </div>
+                </div>
+                {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

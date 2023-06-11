@@ -1,0 +1,66 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Djangobook-signup</title>
+    <link href="{% static 'css/signup.css' %}" rel="stylesheet" type="text/css">
+    <script src="{%static 'js/main.js' %}" type="text/javascript"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="wrapper">
+            <div class="hi-wrapper">
+                <h1 class="text">Welcome to</h1>
+                <img src="{%static 'img/logo.png' %}" class="logo" alt="logo">
+            </div>
+            <button class="login-button">
+                <a href="/login" class="button-text">Login</a>
+            </button>
+        </div>
+    </header>
+    <div class="content">
+        <div class="signup-wrapper">
+            <h1 class="text" id="signup-text">Sign Up</h1>
+
+            <div>
+                <style>
+                    h5{
+                        color: black;
+                    }
+                </style>
+                {% for message in messages %}
+                <h5>{{message}}</h5>
+                {% endfor %}
+            </div>
+
+            <form class="signup-wrapper" action="" method="POST">
+                {% csrf_token %}
+                <label class="signup-label">
+                    <input type="text" name="username" placeholder="Username" class="input-text">
+                </label>
+                <label class="signup-label">
+                    <input type="email" name="email" placeholder="Email" class="input-text">
+                </label>
+                <label class="signup-label">
+                    <input type="password" name="password" placeholder="Password" class="input-text">
+                </label>
+                <label class="signup-label">
+                    <input type="password" name="confirm-password" placeholder="Confirm Password" class="input-text">
+                </label>
+
+                <div class="buttonl">
+                    <button class="login-button" id="login-button">
+                        <a class="button-text" href="/login">Sing Up</a>
+                    </button>
+                </div>
+            </form>
+        
+        </div>
+    </div>
+</body>
+</html>
